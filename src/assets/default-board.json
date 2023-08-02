@@ -1,0 +1,62 @@
+{
+  "name": "trello-clone-default-board",
+  "columns": [
+    {
+      "name": "Tasks",
+      "tasks": [
+        {
+          "description": "",
+          "name": "Update TailwindCSS in trello-clone project",
+          "id": "1a48ffd5d3279",
+          "userAssigned": null,
+          "comments": []
+        },
+        {
+          "description": "",
+          "name": "Refactor UI design",
+          "id": "49e3c13f95f56",
+          "userAssigned": null,
+          "comments": []
+        },
+        {
+          "description": "",
+          "name": "Implement Browser Draggable API",
+          "id": "cc61af7b0f7d8",
+          "userAssigned": null,
+          "comments": []
+        }
+      ]
+    },
+    {
+      "name": "For Review",
+      "tasks": [
+        {
+          "description": "",
+          "name": "Add new task",
+          "id": "c79d312bb5d81",
+          "userAssigned": null,
+          "comments": []
+        },
+        {
+          "description": "",
+          "name": "Add new column",
+          "id": "55c97713e03a5",
+          "userAssigned": null,
+          "comments": []
+        }
+      ]
+    },
+    {
+      "name": "Done",
+      "tasks": [
+        {
+          "description": "",
+          "name": "Deploy initial project",
+          "id": "16ed9109733c1",
+          "userAssigned": null,
+          "comments": []
+        }
+      ]
+    }
+  ]
+}
