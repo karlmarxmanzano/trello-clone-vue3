@@ -17,10 +17,8 @@ interface Props {
 const props = defineProps<Props>()
 
 const moveTaskOrColumn = () => {}
-// const goToTask = () => {}
-const deleteTask = () => {}
 
-const { goToTask } = useBoardStore()
+const { goToTask, deleteTask } = useBoardStore()
 </script>
 
 <template>
@@ -37,7 +35,10 @@ const { goToTask } = useBoardStore()
     >
       <span class="flex-grow text-sm font-medium truncate">{{ task.name }}</span>
 
-      <button @click.stop="deleteTask" class="items-end text-gray-400 group-hover:text-gray-600">
+      <button
+        @click.stop="deleteTask(columnIndex, taskIndex)"
+        class="items-end text-gray-400 group-hover:text-gray-600"
+      >
         <IconTrash />
       </button>
     </AppDrag>

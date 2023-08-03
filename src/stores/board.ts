@@ -1,17 +1,16 @@
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { uuid } from '@/helpers/utils'
-import type { Board, Column, Task } from '@/interfaces/board'
+import type { Board, Column, Task, Comment } from '@/interfaces/board'
 import defaultBoard from '@/assets/default-board.json'
 
 export const useBoardStore = defineStore('board', () => {
+  const route = useRoute()
   const router = useRouter()
 
   const _board = JSON.parse(localStorage.getItem('board') || JSON.stringify(defaultBoard))
   const board = ref<Board>(_board)
-
-  console.log(board.value)
 
   const columnName = ref('')
 
@@ -30,8 +29,7 @@ export const useBoardStore = defineStore('board', () => {
   }
 
   const deleteColumn = (key: number): void => {
-    const columns = board.value.columns
-    columns?.splice(key, 1)
+    board.value.columns?.splice(key, 1)
   }
 
   const createTask = (event: Event, tasks: Task[] | undefined) => {
@@ -58,12 +56,26 @@ export const useBoardStore = defineStore('board', () => {
     }
   }
 
-  const getTask = (taskId: string): Task => {
-    return board.value.columns?.find((col) => {
-      return col.tasks?.some((task) => {
-        return task.id === taskId
-      })
-    }) as Task
+  const getTask = (): Task | null => {
+    const id = route.params.id
+
+    for (const column of board.value.columns ?? []) {
+      for (const _task of column?.tasks ?? []) {
+        if (_task.id === id) {
+          return _task
+        }
+      }
+    }
+
+    return null
+  }
+
+  const deleteTask = (columnIndex: number, taskIndex: number) => {
+    const columns = board.value.columns
+
+    if (columns !== undefined) {
+      columns[columnIndex].tasks?.splice(taskIndex, 1)
+    }
   }
 
   const createComment = (event: Event, comments: Comment[]): void => {
@@ -89,6 +101,7 @@ export const useBoardStore = defineStore('board', () => {
     createTask,
     getTask,
     goToTask,
+    deleteTask,
     updateTaskProperty,
     createComment,
     deleteComment

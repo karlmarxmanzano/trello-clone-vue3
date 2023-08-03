@@ -5,6 +5,7 @@ import { useBoardStore } from '@/stores/board'
 import type { Task } from '@/interfaces/board'
 import useCloseTask from '@/composables/useCloseTask'
 import IconClose from '@/components/icons/IconClose.vue'
+import TaskComment from '@/components/TaskComment.vue'
 
 const route = useRoute()
 const taskId = route.params.id as string
@@ -12,8 +13,8 @@ const taskId = route.params.id as string
 const store = useBoardStore()
 const { getTask, updateTaskProperty, createComment } = store
 
-const task = computed<Task>(() => {
-  return getTask(taskId)
+const task = computed<Task | null>(() => {
+  return getTask()
 })
 
 const { close: closeTask } = useCloseTask()

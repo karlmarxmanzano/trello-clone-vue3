@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useBoardStore } from '@/stores/board'
+import type { Comment } from '@/interfaces/board'
 
 interface Props {
   comment: Comment
@@ -20,7 +21,7 @@ const { deleteComment } = store
       <p class="w-full text-sm break-words font-medium-desc">{{ comment.comment }}</p>
     </div>
 
-    <button @click="deleteComment">
+    <button @click="deleteComment(comments, commentIndex)">
       <p class="pl-2 mt-0 text-xs text-gray-600 hover:text-gray-700">Remove</p>
     </button>
   </div>
