@@ -21,10 +21,9 @@ export default function useMovingTasksAndColumns() {
     //   this.moveColumn(transferData)
     // }
   }
-  
+
   const moveTask = ({ fromColumnIndex, fromTaskIndex }) => {
     // const fromTasks = this.board.columns[fromColumnIndex].tasks
-
     // this.$store.commit('MOVE_TASK', {
     //   fromTasks,
     //   fromTaskIndex,
@@ -32,14 +31,14 @@ export default function useMovingTasksAndColumns() {
     //   toTaskIndex: this.taskIndex
     // })
   }
-  
+
   const moveColumn = ({ fromColumnIndex }) => {
     // this.$store.commit('MOVE_COLUMN', {
     //   fromColumnIndex,
     //   toColumnIndex: this.columnIndex
     // })
   }
-  
+
   return {
     moveTaskOrColumn
   }

@@ -3,39 +3,24 @@ import ColumnTask from './ColumnTask.vue'
 import AppDrag from './AppDrag.vue'
 import AppDrop from './AppDrop.vue'
 import useMovingTasksAndColumns from '@/composables/useMovingTasksAndColumns'
+import { storeToRefs } from 'pinia'
+import { useBoardStore } from '@/stores/board'
+import type { Board, Column } from '@/interfaces/board'
+import IconTrash from './icons/IconTrash.vue'
 
-interface Board {
-  name: string
-  columns?: Column[]
-}
-
-interface Column {
-  name: string
-  tasks?: Task[]
-}
-
-interface Task {
-  id: string
-  name: string
-  description: string
-  userAssigned?: string
-  comments?: Comment[]
-}
-
-interface Comment {
-  comment: string
-}
-
-interface Props {
+const props = defineProps<{
   board: Board
   column: Column
   columnIndex: number
-}
+}>()
 
-const props = defineProps<Props>()
+// const { moveTaskOrColumn } = useMovingTasksAndColumns
 
-const updateColumn = () => {}
 const moveTaskOrColumn = () => {}
+
+const store = useBoardStore()
+
+const { updateColumn, deleteColumn, createTask } = store
 </script>
 
 <template>
@@ -52,16 +37,15 @@ const moveTaskOrColumn = () => {}
           type="text"
           class="flex items-center w-full p-2 mb-2 font-bold bg-transparent"
           :value="column.name"
-          @change="updateColumn($event, 'name', column)"
-          @keyup.enter="updateColumn($event, 'name', column)"
+          @change="updateColumn(column, $event)"
+          @keyup.enter="updateColumn(column, $event)"
         />
 
         <button
-          @click="deleteColumn"
+          @click="deleteColumn(props.columnIndex)"
           class="items-end pl-2 text-gray-400 group-hover:text-gray-600"
         >
-          <!-- <font-awesome-icon icon="trash-alt" /> -->
-          Del
+          <IconTrash />
         </button>
       </div>
 

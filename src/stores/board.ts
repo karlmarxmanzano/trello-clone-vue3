@@ -1,160 +1,96 @@
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { uuid } from '@/helpers/utils'
+import type { Board, Column, Task } from '@/interfaces/board'
 import defaultBoard from '@/assets/default-board.json'
-import type { Board } from '@/interfaces/board'
-import type { Column } from '@/interfaces/column'
 
 export const useBoardStore = defineStore('board', () => {
-  let board = ref<Board>({
-    name: 'trello-clone-default-board',
-    columns: [
-      {
-        name: 'Tasks',
-        tasks: [
-          {
-            description: '',
-            name: 'Update TailwindCSS in trello-clone project',
-            id: '1a48ffd5d3279',
-            userAssigned: null,
-            comments: []
-          },
-          {
-            description: '',
-            name: 'Refactor UI design',
-            id: '49e3c13f95f56',
-            userAssigned: null,
-            comments: []
-          },
-          {
-            description: '',
-            name: 'Implement Browser Draggable API',
-            id: 'cc61af7b0f7d8',
-            userAssigned: null,
-            comments: []
-          }
-        ]
-      },
-      {
-        name: 'For Review',
-        tasks: [
-          {
-            description: '',
-            name: 'Add new task',
-            id: 'c79d312bb5d81',
-            userAssigned: null,
-            comments: []
-          },
-          {
-            description: '',
-            name: 'Add new column',
-            id: '55c97713e03a5',
-            userAssigned: null,
-            comments: []
-          }
-        ]
-      },
-      {
-        name: 'Done',
-        tasks: [
-          {
-            description: '',
-            name: 'Deploy initial project',
-            id: '16ed9109733c1',
-            userAssigned: null,
-            comments: []
-          }
-        ]
-      }
-    ]
-  })
+  const router = useRouter()
+
+  const _board = JSON.parse(localStorage.getItem('board') || JSON.stringify(defaultBoard))
+  const board = ref<Board>(_board)
+
+  console.log(board.value)
 
   const columnName = ref('')
 
-  const createColumn = ({ name }: { name: string }): void => {
-    const col = {
-      name,
+  const createColumn = (): void => {
+    const newColumn: Column = {
+      name: columnName.value,
       tasks: []
     }
 
-    board = { ...board, col }
-
-    return
+    board.value.columns?.push(newColumn)
   }
 
-  const updateColumn = ({
-    column,
-    key,
-    value
-  }: {
-    column: Column
-    key: number
-    value: string
-  }): void => {
-    // column[key] = value
-    return
+  const updateColumn = (column: Column, event: Event | KeyboardEvent): void => {
+    const { target } = event
+    column.name = (target as HTMLInputElement).value
   }
 
-  const deleteColumn = ({ key }: { key: number }): void => {
-    // const columns = board.value.columns
-
-    // columns?.splice(key, 1)
-
-    return
+  const deleteColumn = (key: number): void => {
+    const columns = board.value.columns
+    columns?.splice(key, 1)
   }
 
-  // const getTask = ()  => {
-  //   return (id: String) => {
-  //     const columns = board.value.columns
+  const createTask = (event: Event, tasks: Task[] | undefined) => {
+    const { target } = event
+    const newTask = {
+      id: uuid(),
+      name: (target as HTMLInputElement).value,
+      description: '',
+      comments: []
+    }
 
-  //     columns?.find((column) => {
-  //       return column.tasks?.some((task) => {
-  //         return task.id === id
-  //       })
-  //     })
-  //   }
-  // }
+    tasks?.push(newTask)
+  }
 
-  // const createTask = (state, { tasks, name }) => {
-  //   tasks.push({
-  //     name,
-  //     id: uuid(),
-  //     description: '',
-  //     comments: []
-  //   })
-  // }
+  const goToTask = (task: Task) => {
+    router.push({ name: 'task', params: { id: task.id } })
+  }
 
-  // const updateTask = ({ task, key, value }) => {
-  //   task[key] = value
-  // }
+  const updateTaskProperty = (task: Task, key: keyof typeof task, event: Event | KeyboardEvent) => {
+    const { target } = event
 
-  // const deleteTask = ({ columnIndex, key }) => {
-  //   const taskList = board.value.columns[columnIndex].tasks
-  //   taskList.splice(key, 1)
-  // }
+    if (key !== 'comments') {
+      task[key] = (target as HTMLInputElement).value
+    }
+  }
 
-  // const createComment = ({ comments, comment }) => {
-  //   comments.push({
-  //     comment,
-  //     id: uuid()
-  //   })
-  // }
+  const getTask = (taskId: string): Task => {
+    return board.value.columns?.find((col) => {
+      return col.tasks?.some((task) => {
+        return task.id === taskId
+      })
+    }) as Task
+  }
 
-  // const deleteComment = ({ comments, key }) => {
-  //   comments.splice(key, 1)
-  // }
+  const createComment = (event: Event, comments: Comment[]): void => {
+    const { target } = event
+    const newComment: Comment = {
+      id: uuid(),
+      comment: (target as HTMLInputElement).value
+    }
 
-  // const moveTask = ({ fromTasks, toTasks, fromTaskIndex, toTaskIndex }) => {
-  //   const taskToMove = fromTasks.splice(fromTaskIndex, 1)[0]
-  //   toTasks.splice(toTaskIndex, 0, taskToMove)
-  // }
+    comments?.push(newComment)
+  }
 
-  // const moveColumn = ({ fromColumnIndex, toColumnIndex }) => {
-  //   const columnList = state.board.columns
+  const deleteComment = (comments: Comment[], key: number) => {
+    comments.splice(key, 1)
+  }
 
-  //   const columnToMove = columnList.splice(fromColumnIndex, 1)[0]
-  //   columnList.splice(toColumnIndex, 0, columnToMove)
-  // }
-
-  return { board, columnName, createColumn, updateColumn, deleteColumn }
+  return {
+    board,
+    columnName,
+    createColumn,
+    updateColumn,
+    deleteColumn,
+    createTask,
+    getTask,
+    goToTask,
+    updateTaskProperty,
+    createComment,
+    deleteComment
+  }
 })

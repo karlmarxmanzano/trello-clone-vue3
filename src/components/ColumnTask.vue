@@ -1,29 +1,10 @@
 <script setup lang="ts">
 // import movingTasksAndColumnsMixin from '@/mixins/movingTasksAndColumnsMixin'
+import type { Board, Column, Task } from '@/interfaces/board'
 import AppDrag from './AppDrag.vue'
 import AppDrop from './AppDrop.vue'
-
-interface Board {
-  name: string
-  columns?: Column[]
-}
-
-interface Column {
-  name: string
-  tasks?: Task[]
-}
-
-interface Task {
-  id: string
-  name: string
-  description: string
-  userAssigned?: string
-  comments?: Comment[]
-}
-
-interface Comment {
-  comment: string
-}
+import { useBoardStore } from '@/stores/board'
+import IconTrash from './icons/IconTrash.vue'
 
 interface Props {
   task: Task
@@ -36,6 +17,10 @@ interface Props {
 const props = defineProps<Props>()
 
 const moveTaskOrColumn = () => {}
+// const goToTask = () => {}
+const deleteTask = () => {}
+
+const { goToTask } = useBoardStore()
 </script>
 
 <template>
@@ -53,8 +38,7 @@ const moveTaskOrColumn = () => {}
       <span class="flex-grow text-sm font-medium truncate">{{ task.name }}</span>
 
       <button @click.stop="deleteTask" class="items-end text-gray-400 group-hover:text-gray-600">
-        <!-- <font-awesome-icon icon="trash-alt" /> -->
-        Del
+        <IconTrash />
       </button>
     </AppDrag>
   </AppDrop>

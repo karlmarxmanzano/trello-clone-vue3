@@ -14,9 +14,9 @@ const { board, columnName } = storeToRefs(store)
 const { createColumn } = store
 
 // Persist the whole state to the local storage whenever it changes
-// store.$subscribe((mutation, state) => {
-//   localStorage.setItem('board', JSON.stringify(board))
-// })
+store.$subscribe((mutation, state) => {
+  localStorage.setItem('board', JSON.stringify(board.value))
+})
 </script>
 
 <template>
@@ -25,9 +25,9 @@ const { createColumn } = store
       <BoardColumn
         v-for="(column, $columnIndex) of board.columns"
         :key="$columnIndex"
+        :board="board"
         :column="column"
         :columnIndex="$columnIndex"
-        :board="board"
       />
 
       <div class="relative flex flex-col">
@@ -36,6 +36,7 @@ const { createColumn } = store
           class="flex-grow w-64 max-w-sm p-2 mr-2 text-sm bg-gray-300 rounded md:w-84"
           placeholder="+ Add new list"
           v-model="columnName"
+          @keyup.enter="createColumn"
         />
       </div>
     </div>

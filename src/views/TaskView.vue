@@ -1,29 +1,23 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import { useBoardStore } from '@/stores/board'
+import type { Task } from '@/interfaces/board'
+import IconTrash from '@/components/icons/IconTrash.vue'
 
-type Task = {
-  id: string
-  name: string
-  description: string
-  userAssigned?: string
-  comments?: Comment[]
-}
+const route = useRoute()
+const taskId = route.params.id as string
 
-// const task = computed<Task>(() => {
+console.log(taskId)
 
-// })
+const store = useBoardStore()
+const { getTask, updateTaskProperty, createComment } = store
 
-const task = ref()
+const task = computed<Task>(() => {
+  return getTask(taskId)
+})
 
-type Comment = {
-  comment: string
-}
-
-const comment = ref<Comment>()
-
-const createComment = (e: Event, comment: Comment) => {}
-
-const updateTaskProperty = (e: Event, key: String) => {}
+console.log(task.value)
 </script>
 
 <template>
@@ -36,20 +30,19 @@ const updateTaskProperty = (e: Event, key: String) => {}
           type="text"
           class="w-full p-2 text-xs font-bold bg-transparent md:text-xl"
           :value="task.name"
-          @change="updateTaskProperty($event, 'name')"
-          @keyup.enter="updateTaskProperty($event, 'name')"
+          @change="updateTaskProperty(task, 'name', $event)"
+          @keyup.enter="updateTaskProperty(task, 'name', $event)"
         />
 
         <button @click="" class="px-2">
-          <!-- <font-awesome-icon icon="times" /> -->
-          Times
+          <IconTrash />
         </button>
       </div>
 
       <textarea
         class="w-full h-64 px-2 mt-2 text-sm leading-normal bg-transparent border border-none"
         :value="task.description"
-        @change="updateTaskProperty($event, 'description')"
+        @change="updateTaskProperty(task, 'description', $event)"
       />
 
       <p class="text-sm">Comments:</p>
