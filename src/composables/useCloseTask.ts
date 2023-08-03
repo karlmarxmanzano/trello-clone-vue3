@@ -1,6 +1,6 @@
-import { useRoute, useRouter, type Router } from 'vue-router'
+import { useRouter } from 'vue-router'
 
-export const useCloseTask = () => {
+const useCloseTask = () => {
   const router = useRouter()
 
   const close = () => router.push({ name: 'board' })
@@ -9,3 +9,5 @@ export const useCloseTask = () => {
     close
   }
 }
+
+export default useCloseTask

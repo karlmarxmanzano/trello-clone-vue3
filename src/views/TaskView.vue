@@ -3,12 +3,11 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBoardStore } from '@/stores/board'
 import type { Task } from '@/interfaces/board'
-import IconTrash from '@/components/icons/IconTrash.vue'
+import useCloseTask from '@/composables/useCloseTask'
+import IconClose from '@/components/icons/IconClose.vue'
 
 const route = useRoute()
 const taskId = route.params.id as string
-
-console.log(taskId)
 
 const store = useBoardStore()
 const { getTask, updateTaskProperty, createComment } = store
@@ -17,7 +16,7 @@ const task = computed<Task>(() => {
   return getTask(taskId)
 })
 
-console.log(task.value)
+const { close: closeTask } = useCloseTask()
 </script>
 
 <template>
@@ -34,8 +33,8 @@ console.log(task.value)
           @keyup.enter="updateTaskProperty(task, 'name', $event)"
         />
 
-        <button @click="" class="px-2">
-          <IconTrash />
+        <button @click="closeTask" class="px-2">
+          <IconClose />
         </button>
       </div>
 

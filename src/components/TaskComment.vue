@@ -1,3 +1,17 @@
+<script setup lang="ts">
+import { useBoardStore } from '@/stores/board'
+
+interface Props {
+  comment: Comment
+  commentIndex: number
+  comments: Comment[]
+}
+const props = defineProps<Props>()
+
+const store = useBoardStore()
+const { deleteComment } = store
+</script>
+
 <template>
   <div>
     <div
@@ -11,34 +25,6 @@
     </button>
   </div>
 </template>
-
-<script>
-export default {
-  name: 'TaskComment',
-  props: {
-    comment: {
-      type: Object,
-      required: true
-    },
-    commentIndex: {
-      type: Number,
-      required: true
-    },
-    comments: {
-      type: Array,
-      required: true
-    }
-  },
-  methods: {
-    deleteComment(key) {
-      this.$store.commit('DELETE_COMMENT', {
-        comments: this.comments,
-        key: this.commentIndex
-      })
-    }
-  }
-}
-</script>
 
 <style scoped>
 .list-enter-active,
