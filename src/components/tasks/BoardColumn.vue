@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import ColumnTask from './ColumnTask.vue'
-import AppDrag from './AppDrag.vue'
-import AppDrop from './AppDrop.vue'
-import useMovingTasksAndColumns from '@/composables/useMovingTasksAndColumns'
+import AppDrag from '@/components/draggable/AppDrag.vue'
+import AppDrop from '@/components/draggable/AppDrop.vue'
 import { storeToRefs } from 'pinia'
 import { useBoardStore } from '@/stores/board'
-import type { Board, Column } from '@/interfaces/board'
-import IconTrash from './icons/IconTrash.vue'
+import type { Board, Column } from '@/interfaces'
+import IconTrash from '@/components/icons/IconTrash.vue'
+import useMovingTasksAndColumns from '@/composables/useMovingTasksAndColumns'
 
 const props = defineProps<{
   board: Board
@@ -14,9 +14,12 @@ const props = defineProps<{
   columnIndex: number
 }>()
 
-// const { moveTaskOrColumn } = useMovingTasksAndColumns
-
-const moveTaskOrColumn = () => {}
+const { moveTaskOrColumn } = useMovingTasksAndColumns({
+  column: props.column,
+  toColumnIndex: props.columnIndex,
+  toTaskIndex: 0,
+  board: props.board
+})
 
 const store = useBoardStore()
 

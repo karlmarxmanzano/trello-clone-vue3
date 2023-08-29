@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useBoardStore } from '@/stores/board'
-import type { Comment } from '@/interfaces/board'
+import type { Comment } from '@/interfaces'
 
 interface Props {
   comment: Comment

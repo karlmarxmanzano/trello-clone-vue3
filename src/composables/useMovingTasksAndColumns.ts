@@ -1,45 +1,50 @@
-export default function useMovingTasksAndColumns() {
-  const props = defineProps({
-    column: {
-      type: Object,
-      required: true
-    },
-    columnIndex: {
-      type: Number,
-      required: true
-    },
-    board: {
-      type: Object,
-      required: true
+import type { Board, Column, Task, TransferData } from '@/interfaces'
+import { useBoardStore } from '@/stores/board'
+import { storeToRefs } from 'pinia'
+
+interface Props {
+  column: Column
+  toColumnIndex: number
+  toTaskIndex: number
+  board: Board
+}
+
+const useMovingTasksAndColumns = (props: Props) => {
+  const store = useBoardStore()
+  const { board } = storeToRefs(store)
+
+  const moveTaskOrColumn = (transferData: TransferData) => {
+    if (transferData.type === 'task') {
+      moveTask(transferData)
+    } else {
+      moveColumn(transferData)
     }
-  })
-
-  const moveTaskOrColumn = (transferData) => {
-    // if (transferData.type === 'task') {
-    //   this.moveTask(transferData)
-    // } else {
-    //   this.moveColumn(transferData)
-    // }
   }
 
-  const moveTask = ({ fromColumnIndex, fromTaskIndex }) => {
-    // const fromTasks = this.board.columns[fromColumnIndex].tasks
-    // this.$store.commit('MOVE_TASK', {
-    //   fromTasks,
-    //   fromTaskIndex,
-    //   toTasks: this.column.tasks,
-    //   toTaskIndex: this.taskIndex
-    // })
+  const moveTask = ({ fromColumnIndex, fromTaskIndex }: TransferData) => {
+    const fromTasks = board.value.columns[fromColumnIndex].tasks
+
+    if (fromTaskIndex === undefined) {
+      throw new Error('From task index is undefined.')
+    }
+
+    if (props.toTaskIndex === undefined) {
+      throw new Error('To task index is undefined.')
+    }
+
+    const taskToMove = fromTasks.splice(fromTaskIndex, 1)[0]
+    props.column.tasks.splice(props.toTaskIndex, 0, taskToMove)
   }
 
-  const moveColumn = ({ fromColumnIndex }) => {
-    // this.$store.commit('MOVE_COLUMN', {
-    //   fromColumnIndex,
-    //   toColumnIndex: this.columnIndex
-    // })
+  const moveColumn = ({ fromColumnIndex }: TransferData) => {
+    const columnList = board.value.columns
+    const columnToMove = columnList.splice(fromColumnIndex, 1)[0]
+    columnList.splice(props.toColumnIndex, 0, columnToMove)
   }
 
   return {
     moveTaskOrColumn
   }
 }
+
+export default useMovingTasksAndColumns

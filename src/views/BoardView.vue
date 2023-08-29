@@ -3,8 +3,8 @@ import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBoardStore } from '@/stores/board'
 import { storeToRefs } from 'pinia'
-import { useCloseTask } from '@/composables/useCloseTask'
-import BoardColumn from '@/components/BoardColumn.vue'
+import BoardColumn from '@/components/tasks/BoardColumn.vue'
+// import { useCloseTask } from '@/composables/useCloseTask'
 
 const route = useRoute()
 const isTaskOpen = computed(() => route.name === 'task')
@@ -14,9 +14,9 @@ const { board, columnName } = storeToRefs(store)
 const { createColumn } = store
 
 // Persist the whole state to the local storage whenever it changes
-store.$subscribe((mutation, state) => {
-  localStorage.setItem('board', JSON.stringify(board.value))
-})
+// store.$subscribe((mutation, state) => {
+//   localStorage.setItem('board', JSON.stringify(board.value))
+// })
 </script>
 
 <template>

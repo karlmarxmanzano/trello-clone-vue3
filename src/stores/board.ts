@@ -2,7 +2,7 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { defineStore } from 'pinia'
 import { uuid } from '@/helpers/utils'
-import type { Board, Column, Task, Comment } from '@/interfaces/board'
+import type { Board, Column, Task, Comment } from '@/interfaces'
 import defaultBoard from '@/assets/default-board.json'
 
 export const useBoardStore = defineStore('board', () => {
@@ -38,6 +38,7 @@ export const useBoardStore = defineStore('board', () => {
       id: uuid(),
       name: (target as HTMLInputElement).value,
       description: '',
+      userAssigned: null,
       comments: []
     }
 
@@ -56,7 +57,7 @@ export const useBoardStore = defineStore('board', () => {
     }
   }
 
-  const getTask = (): Task | null => {
+  const selectedTask = computed<Task>(() => {
     const id = route.params.id
 
     for (const column of board.value.columns ?? []) {
@@ -67,15 +68,27 @@ export const useBoardStore = defineStore('board', () => {
       }
     }
 
-    return null
-  }
+    throw new Error('404: Task not found.')
+  })
+
+  // const getTask = (): Task | null => {
+  //   const id = route.params.id
+
+  //   for (const column of board.value.columns ?? []) {
+  //     for (const _task of column?.tasks ?? []) {
+  //       if (_task.id === id) {
+  //         return _task
+  //       }
+  //     }
+  //   }
+
+  //   return null
+  // }
 
   const deleteTask = (columnIndex: number, taskIndex: number) => {
     const columns = board.value.columns
 
-    if (columns !== undefined) {
-      columns[columnIndex].tasks?.splice(taskIndex, 1)
-    }
+    columns[columnIndex].tasks?.splice(taskIndex, 1)
   }
 
   const createComment = (event: Event, comments: Comment[]): void => {
@@ -99,7 +112,7 @@ export const useBoardStore = defineStore('board', () => {
     updateColumn,
     deleteColumn,
     createTask,
-    getTask,
+    selectedTask,
     goToTask,
     deleteTask,
     updateTaskProperty,

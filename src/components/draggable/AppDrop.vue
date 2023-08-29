@@ -2,8 +2,10 @@
 const emit = defineEmits(['drop'])
 
 const onDrop = (e: DragEvent) => {
-  const transferData = JSON.parse(e.dataTransfer!.getData('payload'))
-  emit('drop', transferData)
+  if (e.dataTransfer) {
+    const transferData = JSON.parse(e.dataTransfer.getData('payload'))
+    emit('drop', transferData)
+  }
 }
 </script>
 

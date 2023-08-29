@@ -1,10 +1,11 @@
 <script setup lang="ts">
-// import movingTasksAndColumnsMixin from '@/mixins/movingTasksAndColumnsMixin'
-import type { Board, Column, Task } from '@/interfaces/board'
-import AppDrag from './AppDrag.vue'
-import AppDrop from './AppDrop.vue'
+import type { Board, Column, Task } from '@/interfaces'
+import AppDrag from '@/components/draggable/AppDrag.vue'
+import AppDrop from '@/components/draggable/AppDrop.vue'
 import { useBoardStore } from '@/stores/board'
-import IconTrash from './icons/IconTrash.vue'
+import IconTrash from '@/components/icons/IconTrash.vue'
+import useMovingTasksAndColumns from '@/composables/useMovingTasksAndColumns'
+import { toRefs } from 'vue'
 
 interface Props {
   task: Task
@@ -16,7 +17,12 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const moveTaskOrColumn = () => {}
+const { moveTaskOrColumn } = useMovingTasksAndColumns({
+  column: props.column,
+  toColumnIndex: props.columnIndex,
+  toTaskIndex: props.taskIndex,
+  board: props.board
+})
 
 const { goToTask, deleteTask } = useBoardStore()
 </script>

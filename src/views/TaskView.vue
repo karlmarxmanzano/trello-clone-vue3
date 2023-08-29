@@ -2,20 +2,15 @@
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useBoardStore } from '@/stores/board'
-import type { Task } from '@/interfaces/board'
+import type { Task } from '@/interfaces'
 import useCloseTask from '@/composables/useCloseTask'
 import IconClose from '@/components/icons/IconClose.vue'
-import TaskComment from '@/components/TaskComment.vue'
-
-const route = useRoute()
-const taskId = route.params.id as string
+import TaskComment from '@/components/tasks/TaskComment.vue'
+import { storeToRefs } from 'pinia'
 
 const store = useBoardStore()
-const { getTask, updateTaskProperty, createComment } = store
-
-const task = computed<Task | null>(() => {
-  return getTask()
-})
+const { updateTaskProperty, createComment } = store
+const { selectedTask: task } = storeToRefs(store)
 
 const { close: closeTask } = useCloseTask()
 </script>
